@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DocumentEntity {
   String get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DocumentEntityCopyWith<DocumentEntity> get copyWith =>
@@ -30,7 +30,7 @@ abstract class $DocumentEntityCopyWith<$Res> {
           DocumentEntity value, $Res Function(DocumentEntity) then) =
       _$DocumentEntityCopyWithImpl<$Res, DocumentEntity>;
   @useResult
-  $Res call({String id, String name});
+  $Res call({String id, String title});
 }
 
 /// @nodoc
@@ -47,16 +47,16 @@ class _$DocumentEntityCopyWithImpl<$Res, $Val extends DocumentEntity>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
+    Object? title = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -70,7 +70,7 @@ abstract class _$$DocumentEntityImplCopyWith<$Res>
       __$$DocumentEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name});
+  $Res call({String id, String title});
 }
 
 /// @nodoc
@@ -85,16 +85,16 @@ class __$$DocumentEntityImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
+    Object? title = null,
   }) {
     return _then(_$DocumentEntityImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -103,17 +103,17 @@ class __$$DocumentEntityImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DocumentEntityImpl extends _DocumentEntity {
-  const _$DocumentEntityImpl({required this.id, required this.name})
+  const _$DocumentEntityImpl({required this.id, required this.title})
       : super._();
 
   @override
   final String id;
   @override
-  final String name;
+  final String title;
 
   @override
   String toString() {
-    return 'DocumentEntity(id: $id, name: $name)';
+    return 'DocumentEntity(id: $id, title: $title)';
   }
 
   @override
@@ -122,11 +122,11 @@ class _$DocumentEntityImpl extends _DocumentEntity {
         (other.runtimeType == runtimeType &&
             other is _$DocumentEntityImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name));
+            (identical(other.title, title) || other.title == title));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name);
+  int get hashCode => Object.hash(runtimeType, id, title);
 
   @JsonKey(ignore: true)
   @override
@@ -139,13 +139,13 @@ class _$DocumentEntityImpl extends _DocumentEntity {
 abstract class _DocumentEntity extends DocumentEntity {
   const factory _DocumentEntity(
       {required final String id,
-      required final String name}) = _$DocumentEntityImpl;
+      required final String title}) = _$DocumentEntityImpl;
   const _DocumentEntity._() : super._();
 
   @override
   String get id;
   @override
-  String get name;
+  String get title;
   @override
   @JsonKey(ignore: true)
   _$$DocumentEntityImplCopyWith<_$DocumentEntityImpl> get copyWith =>

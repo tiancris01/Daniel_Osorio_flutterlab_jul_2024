@@ -7,6 +7,6 @@ class DocumentEntity with _$DocumentEntity {
   const DocumentEntity._();
   const factory DocumentEntity({
     required String id,
-    required String name,
+    required String title,
   }) = _DocumentEntity;
 }

@@ -1,32 +1,28 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
 import 'package:prueba_tecnica_2024/src/domain/entities/documents_entity.dart';
-import 'package:prueba_tecnica_2024/src/domain/repository/document_repository.dart';
+import 'package:prueba_tecnica_2024/src/domain/usecases/fetch_document_usecase.dart';
 
 class DocumentBloc {
-  final DocumentRepository _documentRepository;
+  final FetchDocumentUsecase _fetchDocumentUsecase;
+  final _documentController = StreamController<List<DocumentEntity>>();
 
-  DocumentBloc({required DocumentRepository documentRepository})
-      : _documentRepository = documentRepository;
+  DocumentBloc({
+    required FetchDocumentUsecase fetchDocumentUsecase,
+  }) : _fetchDocumentUsecase = fetchDocumentUsecase;
 
-  Stream<List<DocumentEntity>> get documentState =>
-      _documentStateController.stream;
-  final _documentStateController = StreamController<List<DocumentEntity>>();
+  void fetchDocument() async {
+    final result = await _fetchDocumentUsecase();
+    result.fold(
+      (failure) => _documentController.addError(failure),
+      (documents) => _documentController.add(documents),
+    );
+  }
 
   void dispose() {
-    _documentStateController.close();
+    _documentController.close();
   }
 
-  void fetchDocuments() async {
-    try {
-      _documentStateController.add([]);
-      final documents = await _documentRepository.fetchDocument();
-      documents.fold(
-        (l) => _documentStateController.addError(l),
-        (r) => _documentStateController.add(r),
-      );
-    } catch (e) {
-      _documentStateController.addError(e);
-    }
-  }
+  Stream<List<DocumentEntity>> get documentStream => _documentController.stream;
 }

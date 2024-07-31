@@ -25,23 +25,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<DocumentSnapshot> _documents = [];
-  bool _loading = true;
+  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // List<DocumentSnapshot> _documents = [];
+  // bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    // _fetchData();
   }
 
-  Future<void> _fetchData() async {
-    QuerySnapshot snapshot = await _firestore.collection('slowData').get();
-    setState(() {
-      _documents = snapshot.docs;
-      _loading = false;
-    });
-  }
+  // Future<void> _fetchData() async {
+  //   QuerySnapshot snapshot = await _firestore.collection('slowData').get();
+  //   setState(() {
+  //     _documents = snapshot.docs;
+  //     _loading = false;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,19 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Flutter Slow App'),
       ),
-      body: _loading
+      body: Container(
+        color: Colors.blue,
+        child: const Center(
+          child: Text(
+            'Hello, World!',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+            ),
+          ),
+        ),
+      ),
+    ); /*  _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: _documents.length,
@@ -60,6 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-    );
+    ); */
   }
 }

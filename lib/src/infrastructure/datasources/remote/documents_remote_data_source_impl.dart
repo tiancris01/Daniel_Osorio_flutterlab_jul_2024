@@ -20,14 +20,25 @@ class DocumentsRemoteDataSourceImpl implements DocumentsRemoteDataSource {
   @override
   Future<List<DocumentModel>> fetchDocuments() async {
     try {
-      final response = await _firestore.collection('documents').get();
-      return response.docs
-          .map((document) => DocumentModel.fromJson(document.data()))
-          .toList();
+      final response = await _firestore.collection('slowData').get();
+      final jsonData = _addIdJson(response);
+      return jsonData.map((e) => DocumentModel.fromJson(e)).toList();
     } on Error catch (e) {
-      throw ServerFailure(e.toString());
+      throw GeneralFailure(e.toString());
     } on Exception catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  /// Este método se encarga de agregar el id al json de los documentos obtenidos de Firestore.
+  List<Map<String, dynamic>> _addIdJson(
+      QuerySnapshot<Map<String, dynamic>> snapshot) {
+    final json = snapshot.docs.map((document) {
+      final data = document.data();
+      data['name'] = data['name'] ?? 'No name';
+      data['id'] = document.id;
+      return data;
+    }).toList();
+    return json;
   }
 }

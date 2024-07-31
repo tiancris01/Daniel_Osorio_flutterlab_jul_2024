@@ -5,15 +5,14 @@ import 'package:prueba_tecnica_2024/src/infrastructure/repository/document_repos
 import 'package:prueba_tecnica_2024/src/domain/repository/document_repository.dart';
 import 'package:prueba_tecnica_2024/src/domain/usecases/fetch_document_usecase.dart';
 
-class DependencyInjectionDart {
-  static final DependencyInjectionDart _singleton =
-      DependencyInjectionDart._internal();
+class DependencyInjection {
+  static final DependencyInjection _singleton = DependencyInjection._internal();
 
-  factory DependencyInjectionDart() {
+  factory DependencyInjection() {
     return _singleton;
   }
 
-  DependencyInjectionDart._internal();
+  DependencyInjection._internal();
 
   late FirebaseFirestore _firestore;
   late DocumentsRemoteDataSource _documentsRemoteDataSource;

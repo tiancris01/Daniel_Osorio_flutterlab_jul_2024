@@ -1,5 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prueba_tecnica_2024/src/core/utils/dependency_injection.dart';
+import 'package:prueba_tecnica_2024/src/domain/entities/documents_entity.dart';
+import 'package:prueba_tecnica_2024/src/presentation/bloc/document_bloc.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -25,23 +30,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // List<DocumentSnapshot> _documents = [];
-  // bool _loading = true;
+  late DocumentBloc _documentBloc;
+  final _container = DependencyInjection();
+  StreamSubscription<DocumentEntity>? _subscription;
 
   @override
   void initState() {
     super.initState();
-    // _fetchData();
+    final useCase = _container.fetchDocumentUsecase;
+    _documentBloc = DocumentBloc(fetchDocumentUsecase: useCase);
+    _documentBloc.fetchDocument();
   }
 
-  // Future<void> _fetchData() async {
-  //   QuerySnapshot snapshot = await _firestore.collection('slowData').get();
-  //   setState(() {
-  //     _documents = snapshot.docs;
-  //     _loading = false;
-  //   });
-  // }
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _documentBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,29 +55,31 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: const Text('Flutter Slow App'),
       ),
-      body: Container(
-        color: Colors.blue,
-        child: const Center(
-          child: Text(
-            'Hello, World!',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-            ),
-          ),
-        ),
-      ),
-    ); /*  _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _documents.length,
+      body: StreamBuilder<List<DocumentEntity>>(
+        stream: _documentBloc.documentStream,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('Error fetching documents'),
+            );
+          }
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
+                final document = snapshot.data![index];
                 return ListTile(
-                  title: Text(_documents[index]['name']),
-                  subtitle: Text('ID: ${_documents[index].id}'),
+                  title: Text(document.id),
+                  subtitle: Text(document.title),
                 );
               },
-            ),
-    ); */
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:prueba_tecnica_2024/src/core/utils/dependency_injection.dart.dart';
+import 'package:prueba_tecnica_2024/src/core/utils/dependency_injection.dart';
 import 'package:prueba_tecnica_2024/src/presentation/App.dart';
 
 void main() async {
@@ -9,6 +9,6 @@ void main() async {
   // Initialize Firebase
   await Firebase.initializeApp();
   // Run the app
-  DependencyInjectionDart().init();
+  DependencyInjection().init();
   runApp(const App());
 }

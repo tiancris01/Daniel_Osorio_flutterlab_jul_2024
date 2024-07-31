@@ -20,7 +20,7 @@ class DocumentsRemoteDataSourceImpl implements DocumentsRemoteDataSource {
   @override
   Future<List<DocumentModel>> fetchDocuments() async {
     try {
-      final response = await _firestore.collection('slowData').get();
+      final response = await _firestore.collection('slowData').limit(50).get();
       final jsonData = _addIdJson(response);
       return jsonData.map((e) => DocumentModel.fromJson(e)).toList();
     } on Error catch (e) {

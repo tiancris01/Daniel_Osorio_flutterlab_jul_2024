@@ -9,7 +9,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useCase = DependencyInjection().fetchDocumentUsecase;
+    final di = DependencyInjection();
+    final useCase = di.fetchDocumentUsecase;
+    final documentBloc = DocumentBloc(fetchDocumentUsecase: useCase);
+    documentBloc.fetchDocument();
     return DocumentSatate(
       data: DocumentBloc(
         fetchDocumentUsecase: useCase,

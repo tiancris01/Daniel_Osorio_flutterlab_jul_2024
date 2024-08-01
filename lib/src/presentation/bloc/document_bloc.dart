@@ -11,10 +11,15 @@ class DocumentBloc {
     required FetchDocumentUsecase fetchDocumentUsecase,
   }) : _fetchDocumentUsecase = fetchDocumentUsecase;
 
-  void fetchDocument() async {
-    final result = await _fetchDocumentUsecase();
+  void fetchDocument({String? nameLast}) async {
+    final result = await _fetchDocumentUsecase(
+      20,
+      nameLast: nameLast,
+    );
     result.fold(
-      (failure) => _documentController.addError(failure),
+      (failure) {
+        _documentController.addError(failure);
+      },
       (documents) => _documentController.add(documents),
     );
   }

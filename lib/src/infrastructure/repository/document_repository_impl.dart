@@ -20,15 +20,21 @@ class DocumentRepositoryImpl implements DocumentRepository {
   /// Este método se encarga de obtener los documentos almacenados en la base de datos.
   /// EL metodo `toDomain` transforma el modelo a una entidad.
   @override
-  Future<Either<Failure, List<DocumentEntity>>> fetchDocument() async {
+  Future<Either<Failure, List<DocumentEntity>>> fetchDocument(int limit,
+      {String? nameLast}) async {
     try {
-      final response = await _documentsRemoteDataSource.fetchDocuments();
+      final response = await _documentsRemoteDataSource.fetchDocuments(
+        limit,
+        nameLast: nameLast,
+      );
       // Transformar la lista de documentos de modelo a entidad
       final documents =
           response.map((document) => document.toDomain()).toList();
       return Right(documents);
-    } on Failure catch (e) {
-      return Left(e);
+    } on Error catch (e) {
+      return Left(GeneralFailure(e.toString()));
+    } on Exception catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

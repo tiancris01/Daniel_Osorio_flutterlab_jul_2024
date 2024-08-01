@@ -26,7 +26,10 @@ class DocumentsRemoteDataSourceImpl implements DocumentsRemoteDataSource {
       if (nameLast != null) {
         query = query.startAfter([nameLast]);
       }
+      // final Stopwatch stopwatch = Stopwatch()..start();
       final response = await query.get() as QuerySnapshot<Map<String, dynamic>>;
+      // print('Query time: ${stopwatch.elapsedMilliseconds}');
+      // stopwatch.stop();
       await Future.delayed(const Duration(seconds: 2));
       final jsonData = _addIdJson(response);
       return jsonData.map((e) => DocumentModel.fromJson(e)).toList();

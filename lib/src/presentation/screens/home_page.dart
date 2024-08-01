@@ -11,6 +11,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<HomePage> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(_scrollListener);
+  }
+
   @override
   Widget build(BuildContext context) {
     DocumentBloc state = DocumentSatate.of(context);
@@ -25,11 +33,6 @@ class _MyHomePageState extends State<HomePage> {
             case ConnectionState.none:
             case ConnectionState.waiting:
             case ConnectionState.active:
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error al obtener los datos: ${snapshot.error}'),
-                );
-              }
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -40,48 +43,38 @@ class _MyHomePageState extends State<HomePage> {
                 );
               }
               return ListView.builder(
-                itemCount: snapshot.data!.length,
+                controller: scrollController,
+                itemCount: state.isLoading
+                    ? snapshot.data!.length + 1
+                    : snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final document = snapshot.data![index];
-                  return ListTile(
-                    title: Text(document.id),
-                    subtitle: Text(document.title),
-                  );
+                  if (index < snapshot.data!.length) {
+                    return ListTile(
+                      title: Text(snapshot.data![index].id),
+                      subtitle: Text(snapshot.data![index].title),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
                 },
               );
           }
-
-          /* 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          snapshot.error != null
-              ? const Center(
-                  child: Text('Error al obtener los datos'),
-                )
-              : const Center(
-                  child: Text('Datos obtenidos correctamente'),
-                );
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final document = snapshot.data![index];
-                return ListTile(
-                  title: Text(document.id),
-                  subtitle: Text(document.title),
-                );
-              },
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-         */
         },
       ),
     );
+  }
+
+  void _scrollListener() {
+    final state = DocumentSatate.of(context);
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent - 100) {
+      if (!state.isLoading) {
+        state.isLoading = true;
+        state.fetchDocument();
+        state.isLoading = false;
+      }
+    }
   }
 }

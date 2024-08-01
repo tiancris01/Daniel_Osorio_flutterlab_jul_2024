@@ -6,20 +6,16 @@ import 'package:prueba_tecnica_2024/src/domain/usecases/fetch_document_usecase.d
 class DocumentBloc {
   final FetchDocumentUsecase _fetchDocumentUsecase;
   final _documentController = StreamController<List<DocumentEntity>>();
+  bool isLoading = false;
 
   DocumentBloc({
     required FetchDocumentUsecase fetchDocumentUsecase,
   }) : _fetchDocumentUsecase = fetchDocumentUsecase;
 
   void fetchDocument({String? nameLast}) async {
-    final result = await _fetchDocumentUsecase(
-      20,
-      nameLast: nameLast,
-    );
+    final result = await _fetchDocumentUsecase(20, nameLast: nameLast);
     result.fold(
-      (failure) {
-        _documentController.addError(failure);
-      },
+      (failure) => _documentController.addError(failure),
       (documents) => _documentController.add(documents),
     );
   }

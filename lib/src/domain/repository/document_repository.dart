@@ -13,5 +13,6 @@ import 'package:prueba_tecnica_2024/src/domain/entities/documents_entity.dart';
 abstract class DocumentRepository {
   /// Este método se encarga de obtener los datos almacenados en la base de datos.
   ///
-  Future<Either<Failure, List<DocumentEntity>>> fetchDocument();
+  Future<Either<Failure, List<DocumentEntity>>> fetchDocument(int limit,
+      {String? nameLast});
 }

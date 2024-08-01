@@ -4,5 +4,5 @@ import 'package:prueba_tecnica_2024/src/infrastructure/models/document_model.dar
 /// realizar en la fuente de datos remota de documentos.
 abstract class DocumentsRemoteDataSource {
   /// Método que obtiene los documentos desde la fuente de datos remota.
-  Future<List<DocumentModel>> fetchDocuments();
+  Future<List<DocumentModel>> fetchDocuments(int limit, {String? nameLast});
 }

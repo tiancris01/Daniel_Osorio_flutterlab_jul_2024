@@ -18,15 +18,22 @@ class DocumentsRemoteDataSourceImpl implements DocumentsRemoteDataSource {
   /// Este método se encarga de obtener los documentos almacenados en la base de datos. se encarga
   /// de hacer una petición a la base de datos de Firestore y regresar una lista de `DocumentModel`.
   @override
-  Future<List<DocumentModel>> fetchDocuments() async {
+  Future<List<DocumentModel>> fetchDocuments(int limit,
+      {String? nameLast}) async {
     try {
-      final response = await _firestore.collection('slowData').limit(50).get();
+      Query query =
+          _firestore.collection('slowData').orderBy('name').limit(limit);
+      if (nameLast != null) {
+        query = query.startAfter([nameLast]);
+      }
+      final response = await query.get() as QuerySnapshot<Map<String, dynamic>>;
+      await Future.delayed(const Duration(seconds: 2));
       final jsonData = _addIdJson(response);
       return jsonData.map((e) => DocumentModel.fromJson(e)).toList();
     } on Error catch (e) {
       throw GeneralFailure(e.toString());
     } on Exception catch (e) {
-      throw ServerException(e.toString());
+      throw GeneralException(message: e.toString());
     }
   }
 

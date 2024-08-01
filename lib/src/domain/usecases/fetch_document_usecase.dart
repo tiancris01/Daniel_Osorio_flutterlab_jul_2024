@@ -14,7 +14,11 @@ class FetchDocumentUsecase {
       : _documentRepository = documentRepository;
 
   /// Este método se encarga de obtener los documentos almacenados en la base de datos.
-  Future<Either<Failure, List<DocumentEntity>>> call() async {
-    return await _documentRepository.fetchDocument();
+  Future<Either<Failure, List<DocumentEntity>>> call(int limit,
+      {String? nameLast}) async {
+    return await _documentRepository.fetchDocument(
+      limit,
+      nameLast: nameLast,
+    );
   }
 }

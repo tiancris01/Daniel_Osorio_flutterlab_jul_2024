@@ -1,21 +1,37 @@
 import 'dart:async';
 
+// import 'package:flutter/material.dart';
 import 'package:prueba_tecnica_2024/src/domain/entities/documents_entity.dart';
 import 'package:prueba_tecnica_2024/src/domain/usecases/fetch_document_usecase.dart';
 
 class DocumentBloc {
   final FetchDocumentUsecase _fetchDocumentUsecase;
-  final _documentController = StreamController<List<DocumentEntity>>();
+  final _documentController =
+      StreamController<List<DocumentEntity>>.broadcast();
+  final List<DocumentEntity> _documents = [];
+  String? _nameLast;
+  bool _isFetching = false;
+
+  bool get isFetching => _isFetching; // Expose fetching status
 
   DocumentBloc({
     required FetchDocumentUsecase fetchDocumentUsecase,
   }) : _fetchDocumentUsecase = fetchDocumentUsecase;
 
   void fetchDocument() async {
-    final result = await _fetchDocumentUsecase();
+    if (_isFetching) return;
+    _isFetching = true;
+    final result = await _fetchDocumentUsecase(20, nameLast: _nameLast);
     result.fold(
       (failure) => _documentController.addError(failure),
-      (documents) => _documentController.add(documents),
+      (documents) {
+        if (documents.isNotEmpty) {
+          _nameLast = documents.last.title;
+          _documents.addAll(documents);
+          _documentController.add(_documents); // Add the complete list
+        }
+        _isFetching = false;
+      },
     );
   }
 

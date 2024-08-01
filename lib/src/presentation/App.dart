@@ -9,11 +9,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useCase = DependencyInjection().fetchDocumentUsecase;
-    return DocumentSatate(
-      data: DocumentBloc(
-        fetchDocumentUsecase: useCase,
-      ),
+    final di = DependencyInjection();
+    final useCase = di.fetchDocumentUsecase;
+    final documentBloc = DocumentBloc(fetchDocumentUsecase: useCase);
+    documentBloc.fetchDocument();
+    return DocumentState.DocumentState(
+      data: documentBloc,
       child: MaterialApp(
         title: 'Flutter Slow App',
         theme: ThemeData(

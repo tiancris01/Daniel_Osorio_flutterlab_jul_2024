@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             );
           }
-          final documents = snapshot.data!;
+          final documents = snapshot.data;
           if (snapshot.hasError) {
             return Center(
               child: Padding(
@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
             );
           }
           // CustomScrollView para mostrar la lista de documentos
+          // y los Slivers necesarios para mostrar el CustomSliverAppBar
           return CustomScrollView(
             controller: _scrollController,
             slivers: [
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
               const SliverToBoxAdapter(
                 child: SizedBox(height: 10),
               ),
-              CustomSliverList(documents: documents)
+              CustomSliverList(documents: documents!)
             ],
           );
         },

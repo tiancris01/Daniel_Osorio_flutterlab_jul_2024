@@ -6,6 +6,7 @@ part 'document_model.g.dart';
 
 /// La clase `DocumentModel` o DTO es una clase de datos que representa el modelo de datos de un documento
 ///
+@freezed
 class DocumentModel with _$DocumentModel {
   const DocumentModel._();
 

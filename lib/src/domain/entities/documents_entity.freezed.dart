@@ -16,7 +16,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$DocumentEntity {
+  /// Un `String` que representa el identificador del documento.
   String get id => throw _privateConstructorUsedError;
+
+  /// Un `String` que representa el título del documento.
   String get title => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -106,8 +109,11 @@ class _$DocumentEntityImpl extends _DocumentEntity {
   const _$DocumentEntityImpl({required this.id, required this.title})
       : super._();
 
+  /// Un `String` que representa el identificador del documento.
   @override
   final String id;
+
+  /// Un `String` que representa el título del documento.
   @override
   final String title;
 
@@ -143,8 +149,12 @@ abstract class _DocumentEntity extends DocumentEntity {
   const _DocumentEntity._() : super._();
 
   @override
+
+  /// Un `String` que representa el identificador del documento.
   String get id;
   @override
+
+  /// Un `String` que representa el título del documento.
   String get title;
   @override
   @JsonKey(ignore: true)

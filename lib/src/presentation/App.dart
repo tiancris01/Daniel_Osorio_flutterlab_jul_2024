@@ -17,6 +17,7 @@ class App extends StatelessWidget {
       data: documentBloc,
       child: MaterialApp(
         title: 'Flutter Slow App',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,

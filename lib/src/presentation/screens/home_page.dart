@@ -7,21 +7,31 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<HomePage> {
-  final scrollController = ScrollController();
+class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(_scrollListener);
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    final state = DocumentState.of(context);
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (!state.isFetching) {
+        state.fetchDocument(); // Fetch more documents when reaching the end
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    DocumentBloc state = DocumentSatate.of(context);
+    DocumentBloc state = DocumentState.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Slow App'),
@@ -29,52 +39,44 @@ class _MyHomePageState extends State<HomePage> {
       body: StreamBuilder<List<DocumentEntity>>(
         stream: state.documentStream,
         builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-            case ConnectionState.active:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error al obtener los datos: ${snapshot.error}'),
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          final documents = snapshot.data!;
+          return ListView.builder(
+            controller: _scrollController,
+            itemCount: documents.length + (state.isFetching ? 1 : 0),
+            itemBuilder: (context, index) {
+              final document = documents[index];
+              if (index == documents.length - 1) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               }
-              return ListView.builder(
-                controller: scrollController,
-                itemCount: state.isLoading
-                    ? snapshot.data!.length + 1
-                    : snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  if (index < snapshot.data!.length) {
-                    return ListTile(
-                      title: Text(snapshot.data![index].id),
-                      subtitle: Text(snapshot.data![index].title),
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                },
+              return ListTile(
+                title: Text(document.title),
+                subtitle: Text(document.id),
+                leading: CircleAvatar(
+                  child: Text('${index + 1}'),
+                ),
               );
-          }
+            },
+          );
         },
       ),
     );
   }
 
-  void _scrollListener() {
-    final state = DocumentSatate.of(context);
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent - 100) {
-      if (!state.isLoading) {
-        state.isLoading = true;
-        state.fetchDocument();
-        state.isLoading = false;
-      }
-    }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

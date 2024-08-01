@@ -13,10 +13,8 @@ class App extends StatelessWidget {
     final useCase = di.fetchDocumentUsecase;
     final documentBloc = DocumentBloc(fetchDocumentUsecase: useCase);
     documentBloc.fetchDocument();
-    return DocumentSatate(
-      data: DocumentBloc(
-        fetchDocumentUsecase: useCase,
-      ),
+    return DocumentState.DocumentState(
+      data: documentBloc,
       child: MaterialApp(
         title: 'Flutter Slow App',
         theme: ThemeData(

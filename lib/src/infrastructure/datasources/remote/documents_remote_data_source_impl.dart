@@ -22,11 +22,12 @@ class DocumentsRemoteDataSourceImpl implements DocumentsRemoteDataSource {
       {String? nameLast}) async {
     try {
       Query query =
-          _firestore.collection('documents').orderBy('name').limit(limit);
+          _firestore.collection('slowData').orderBy('name').limit(limit);
       if (nameLast != null) {
         query = query.startAfter([nameLast]);
       }
       final response = await query.get() as QuerySnapshot<Map<String, dynamic>>;
+      await Future.delayed(const Duration(seconds: 2));
       final jsonData = _addIdJson(response);
       return jsonData.map((e) => DocumentModel.fromJson(e)).toList();
     } on Error catch (e) {
